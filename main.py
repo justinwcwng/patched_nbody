@@ -13,7 +13,7 @@ def main():
 
     # simulation
     t_patched = patched_sim(r1, r2, t_sim)
-    #t_nbody = nbody_sim(r1, r2, t_sim)
+    t_nbody = nbody_sim(r1, r2, t_sim)
 
     # visualisation
     plot_xy(patched = False)
@@ -21,7 +21,7 @@ def main():
 
     print()
     print(f"patched conic method: {t_patched:.5f} s")
-    #print(f"nbody method: {t_nbody:.5f} s")
+    print(f"nbody method: {t_nbody:.5f} s")
     print()
 
 if __name__ == "__main__":
