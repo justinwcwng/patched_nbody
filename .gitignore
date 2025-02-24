@@ -1,0 +1,9 @@
+*.csv
+*.png
+*.txt
+data/
+output/
+plots/
+.vscode/
+__pycache__/
+*.pyc
