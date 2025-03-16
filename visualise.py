@@ -52,17 +52,6 @@ def plot_v(
 
     fig, ax = plt.subplots(figsize=(15,8))
 
-    # set x and y limits
-    #xmin = -5
-    #xmax = 5
-    #ymin = 0
-    #ymax = 12
-    #ax.set_xlim([xmin, xmax])
-    #ax.set_ylim([ymin, ymax])
-
-    #ax.set_xticks(range(0, 458000, 40000))
-    #ax.set_yticks(range(-2, 13, 1))
-
     ax.set_xlabel("time elapsed (s)")
     ax.set_ylabel("velocity (km/s)")
 
@@ -89,7 +78,7 @@ def plot_xy(
     colours = ["yellow", "orange"]
     legend = ["Earth", "Moon's SOI", "Moon", "Patch Point", "Patched Conic Approx", "n-Body Problem Solution"]
 
-    fig, ax = plt.subplots(figsize=(16,9))
+    fig, ax = plt.subplots(figsize=(13,10))
     ax.set_facecolor("#050505")
 
     # Earth Patch
@@ -128,7 +117,61 @@ def plot_xy(
         plt.legend(legend)
         plt.savefig("plots/current_xy.png")
 
+def plot_r(
+        patched: bool = False
+    ) -> None:
+
+    """
+    Plots simulated position data over time.
+    """
+
+    filenames = ["patched_EarthMoon.csv"] if patched else ["patched_EarthMoon.csv", "nBody_EarthMoon.csv"]
+    t, x, y, z, r, vx, vy, vz, v = read_csvs(filenames)
+
+    colours = ["red", "green"]
+    legend = ["Distance from Earth"]
+
+    fig, ax = plt.subplots(figsize=(15,8))
+
+    ax.set_xlabel("time elapsed (s)")
+    ax.set_ylabel("position r (km)")
+
+    for i in range(len(filenames)):
+        ax.plot(t[i], r[i], c=colours[i])
+    ax.legend(["patched", "nBody"])
+    #ax.legend(legend)
+    ax.grid()
+    plt.savefig("plots/current_r.png")
+
+def plot_r_v(
+        patched: bool = False
+    ) -> None:
+
+    """
+    Plots simulated position data on the top and velocity data on the bottom over time.
+    """
+
+    filenames = ["patched_EarthMoon.csv"] if patched else ["patched_EarthMoon.csv", "nBody_EarthMoon.csv"]
+    t, x, y, z, r, vx, vy, vz, v = read_csvs(filenames)
+
+    colours = ["red", "blue"]
+
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(13,10))
+
+    ax1.set_ylabel("distance from earth (km)")
+    ax2.set_ylabel("velocity (km/s)")
+    ax2.set_xlabel("time elapsed (s)")
+
+    for i in range(len(filenames)):
+        ax1.plot(t[i], r[i], c=colours[i])
+        ax2.plot(t[i], v[i], c=colours[i])
+    ax1.legend(["patched", "nBody"])
+    ax1.grid()
+    ax2.grid()
+
+    plt.savefig("plots/current_r_v.png")
+
 if __name__ == "__main__":
     #pass
-    plot_v(patched = False)
+    plot_r_v(patched = False)
     plot_xy(patched = False)

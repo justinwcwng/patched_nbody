@@ -1,22 +1,44 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import datetime
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.animation import FuncAnimation
 
 df = pd.read_csv("data/as16_pancam_state_vectors.csv")
 
-df["utc_time_str"] = pd.to_datetime(df["utc_time_str"], errors="coerce")
-df2 = df[["utc_time_str", "x1950_x", "x1950_y", "x1950_z"]]
-df2.sort_values(by="utc_time_str", inplace=True)
+df["date"] = df["utc_time_str"].str[:10]
+df["time"] = df["utc_time_str"].str[11:]
+
+df["date"] = pd.to_datetime(df["date"])
+df["time"] = pd.to_datetime(df["time"])
+
+df["datetime"] = pd.to_datetime(df["utc_time_str"], errors="coerce")
+df.sort_values(by="datetime", inplace=True)
+
+df = df[df["date"] == pd.Timestamp("1972-04-21")]
+
+df2 = df[["datetime", "date", "time", "x1950_x", "x1950_y", "x1950_z", "x1950_xdot", "x1950_ydot", "x1950_zdot"]]
+
+date_counts = df2["date"].value_counts()
+print(date_counts)
 
 df2.to_csv("data/current_data.csv")
 
+dt = df2["datetime"]
+d = df2["date"]
+t = df2["time"]
 x = df2["x1950_x"]
 y = df2["x1950_y"]
 z = df2["x1950_z"]
+r = np.sqrt(x**2 + y**2 + z**2)
+vx = df2["x1950_xdot"]
+vy = df2["x1950_ydot"]
+vz = df2["x1950_zdot"]
+v = np.sqrt(vx**2 + vy**2 + vz**2)
 
-def plotter():
+def plot_xyz():
+
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
@@ -27,7 +49,22 @@ def plotter():
 
     ax.scatter(x, y, z, marker='o', alpha=1, linewidths=0, edgecolors=None, s=2)
     plt.axis("equal")
-    plt.savefig("plots/plot.png")
+    plt.savefig("plots/as16.png")
+
+def plot_r_v():
+
+    fig, (ax1, ax2) = plt.subplots(2, 1)
+
+    ax1.plot(t, r)
+    ax1.set_ylabel("distance from Earth")
+    ax1.grid()
+
+    ax2.plot(t, v)
+    ax2.set_ylabel("velocity")
+    ax2.set_xlabel("time (UTC)")
+    ax2.grid()
+
+    plt.savefig("plots/as16_r_v_over_t")
 
 def animator():
     # Create a figure and 3D axis
@@ -77,4 +114,5 @@ def animator():
     # Show the plot (animation)
     plt.show()
 
-plotter()
+#plot_xyz()
+plot_r_v()

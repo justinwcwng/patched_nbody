@@ -12,7 +12,7 @@ R_earth = 6378 # km
 R_moon = 1737 # km
 
 # Semi-major axis of planets' orbits around the Sun
-r_LEO = 7378 # LEO radius (km) (200km altitude)
+r_LEO = 7378 # LEO radius (km)
 r_moon = 384400 # Moon orbit radius (km)
 
 # sphere of influence of celestial bodies

@@ -7,7 +7,7 @@ def compute_a_e(
         rp: float
     ) -> tuple[float]:
 
-    """Calculate the semi-major axis (a) and eccentricity (e) using radius of apogee (ra) and radius of perigee (rp)."""
+    """Calculates the semi-major axis (a) and eccentricity (e) using radius of apogee (ra) and radius of perigee (rp)."""
 
     # semi-major axis
     a = (ra + rp) / 2
@@ -16,6 +16,12 @@ def compute_a_e(
     e = (ra - rp) / (ra + rp)
 
     return a, e
+
+def solveE(M, e):
+
+    """Solves Kepler's Equation for E given M and e using Newton's method."""
+    
+    return newton(lambda E: E - e * np.sin(E) - M, M, fprime=lambda E: 1 - e * np.cos(E))
 
 def elliptical(
         mu: float,
@@ -31,9 +37,14 @@ def elliptical(
     T = np.pi * np.sqrt(a**3 / mu)  # time for half-orbit
     
     t = np.linspace(0, T, n_points) # generate time points
-    E = np.linspace(0, np.pi, n_points) # eccentric anomaly
-    n = np.sqrt(mu / a**3) # mean motion
-    theta = 2 * np.arctan(np.sqrt((1 + e) / (1 - e)) * np.tan(E / 2)) # true anomaly
+    n = np.sqrt(mu / a**3)          # mean motion
+    M = n * t                       # mean anomaly
+
+    # eccentric anomaly
+    E = np.array([solveE(M_i, e) for M_i in M])
+
+    # true anomaly
+    theta = 2 * np.arctan(np.sqrt((1 + e) / (1 - e)) * np.tan(E / 2))
     
     # obtain position components
     x = a * (np.cos(E) - e)
@@ -46,6 +57,7 @@ def elliptical(
     v_r = (a * e * np.sin(E) * n) / (1 - e * np.cos(E)) # radial velocity
     v_t = np.sqrt(v**2 - v_r**2) # tangential velocity
     
+    # convert to Cartesian
     vx = v_r * np.cos(theta) - v_t * np.sin(theta)
     vy = v_r * np.sin(theta) + v_t * np.cos(theta)
     vz = np.zeros_like(vx)
@@ -132,6 +144,12 @@ def orbital_elements(
 
     return a, e, i, Omega, omega, theta
 
+def solveF(M, e):
+
+    """Solves Kepler's Equation for F given M and e using Newton's method."""
+
+    return newton(lambda F: e * np.sinh(F) - F - M, M, fprime=lambda F: e * np.cosh(F) - 1)
+
 def hyperbolic(
         mu: float,
         a: float,
@@ -156,11 +174,8 @@ def hyperbolic(
     n = np.sqrt(mu / abs(a)**3) # mean motion
     M = M0 - n * t              # mean anomaly
 
-    # obtain hyperbolic eccentric anomaly F using numerical solver
-    def solveF(F, M, e):
-        return e * np.sinh(F) - F - M
-
-    F = np.array([newton(solveF, Mi, args=(Mi, e)) for Mi in M])
+    # hyperbolic eccentric anomaly
+    F = np.array([solveF(M_i, e) for M_i in M])
 
     # obtain position components using hyperbolic formulas
     x = a * (np.cosh(F) - e)
@@ -183,6 +198,3 @@ def hyperbolic(
     # vx, vy, vz to be found
 
     return t, x_rot, y_rot, z, r, v
-
-if __name__ == "__main__":
-    pass

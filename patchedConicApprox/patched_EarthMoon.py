@@ -28,16 +28,16 @@ def patched_sim(
 
     a, e = compute_a_e(ra, rp)
     t, x, y, z, r, vx, vy, vz, v = elliptical(mu = mu_earth,
-                                                    a = a,
-                                                    e = e,
-                                                    n_points = 1_000
-                                                    )
+                                              a = a,
+                                              e = e,
+                                              n_points = 1_000
+                                             )
 
     entered_soi_moon = detect_soi_moon(soi_moon = soi_moon,
                                        x = x,
                                        y = y,
                                        z = z
-                                       )
+                                      )
     x0 = x[entered_soi_moon]
     y0 = y[entered_soi_moon]
     z0 = z[entered_soi_moon]
@@ -51,13 +51,13 @@ def patched_sim(
         f.write(str(entered_soi_moon)) # store index as str
 
     a_h, e_h, i, Omega, omega, theta_moon = orbital_elements(mu_moon,
-                                                                   np.array([x0]),
-                                                                   np.array([y0]),
-                                                                   np.array([z0]),
-                                                                   np.array([vx0]),
-                                                                   np.array([vy0]),
-                                                                   np.array([vz0])
-                                                                   )
+                                                             np.array([x0]),
+                                                             np.array([y0]),
+                                                             np.array([z0]),
+                                                             np.array([vx0]),
+                                                             np.array([vy0]),
+                                                             np.array([vz0])
+                                                            )
     
     useful_data = pd.DataFrame({
         "Var": ["Patch Point Index", "x0", "y0", "z0", "r0", "vx0", "vy0", "vz0", "v0", "a_h", "e_h", "inclination", "longitude of asc node", "argument of periapsis", "true anomaly"],
