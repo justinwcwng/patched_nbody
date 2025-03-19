@@ -53,13 +53,13 @@ def plot_r_v_diff() -> None:
     ax1.plot(t, r_diff, c="grey")
     ax1.set_ylabel("difference in distance from earth (km)")
     
-    ax1.set_ylim([0, 6000])
+    #ax1.set_ylim([0, 1000])
 
     ax2.plot(t, v_diff, c="orange")
     ax2.set_xlabel("time elapsed (s)")
     ax2.set_ylabel("difference in velocity (km/s)")
 
-    ax2.set_ylim([0, 0.2])
+    #ax2.set_ylim([0, 0.002])
 
     ax1.grid()
     ax2.grid()

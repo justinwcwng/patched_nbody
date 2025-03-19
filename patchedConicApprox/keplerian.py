@@ -148,7 +148,7 @@ def hyperbolic(
     Currently trialling a fixed Moon hyperbolic fly-by.
     """
 
-    t = np.linspace(0, t_max, n_points) # time points
+    t = np.linspace(0, t_max, n_points) # generate time points
 
     # initial hyperbolic eccentric anomaly
     F0 = 2 * np.arctanh(np.sqrt((e - 1) / (e + 1)) * np.tan(theta / 2))
@@ -160,7 +160,7 @@ def hyperbolic(
     # hyperbolic eccentric anomaly
     F = np.array([solveF(M_i, e) for M_i in M])
 
-    # obtain position components using hyperbolic formulas
+    # obtain position components
     x = a * (np.cosh(F) - e)
     y = a * np.sqrt(e**2 - 1) * np.sinh(F)
     z = np.zeros_like(x)
@@ -169,15 +169,16 @@ def hyperbolic(
     x_rot = x * np.cos(omega) - y * np.sin(omega)
     y_rot = x * np.sin(omega) + y * np.cos(omega)
 
+    # obtain velocity components
+    r_moon = np.sqrt(x_rot**2 + y_rot**2)
+    v = np.sqrt(mu * ((2 / r_moon) - (1 / a))) # vis viva velocity
+    # vx, vy, vz to be found
+
     # adjust to moon-centred frame
     x_rot += moon_xyz[0]
     y_rot += moon_xyz[1]
     z += moon_xyz[2]
     
     r = np.sqrt(x_rot**2 + y_rot**2 + z**2)
-
-    # obtain velocity components
-    v = np.sqrt(mu * (2 / r - 1 / a)) # vis viva velocity
-    # vx, vy, vz to be found
 
     return t, x_rot, y_rot, z, r, v

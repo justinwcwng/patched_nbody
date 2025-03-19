@@ -7,9 +7,9 @@ from constants import R_earth, r_moon
 
 def main():
 
-    r1 = R_earth + 7000 # km
-    r2 = r_moon + 7000 # km
-    t_sim = 600_000 # s
+    r1 = R_earth + 10_000 # km
+    r2 = r_moon + 5_000 # km
+    t_sim = 500_000 # s
 
     # simulation
     t_patched = patched_sim(r1, r2, t_sim)

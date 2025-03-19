@@ -1,6 +1,6 @@
 import numpy as np
 
-from constants import mu_earth, mu_moon, r_moon
+from constants import mu_earth, mu_moon, r_moon, soi_moon
 from celestial_xyz import earth_xyz
 
 def moon_position(theta: float=0) -> list[float]:
@@ -35,14 +35,21 @@ def acceleration(x, y):
     a_x_moon = a_moon * np.cos(alpha_moon)
     a_y_moon = a_moon * np.sin(alpha_moon)
 
-    return a_x_earth + a_x_moon, a_y_earth + a_y_moon #a_x_earth, a_y_earth
+    # temporary manual gravity override
+    distanceFromMoon = np.sqrt((x - r_moon[0])**2 + (y - r_moon[1])**2)
+    soi_bool = (distanceFromMoon < soi_moon)
+    #acc = (a_x_moon, a_y_moon) if soi_bool else (a_x_earth , a_y_earth)
+
+    acc = a_x_earth + a_x_moon, a_y_earth + a_y_moon
+
+    return acc
 
 def verlet_integrator(state, h):
 
     """
     Returns the state after one time step.
     """
-    
+
     x, y, v_x, v_y = state # unpack
 
     a_x_old, a_y_old = acceleration(x, y)

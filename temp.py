@@ -12,4 +12,4 @@ def investigate_theta_F():
     plt.legend([_ for _ in e])
     plt.show()
 
-# investigate_theta_F()
+#investigate_theta_F()
