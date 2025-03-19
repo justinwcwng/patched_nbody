@@ -30,7 +30,7 @@ def plot_v(
         ax.plot(t[i], v[i], c=colours[i])
         #ax.plot(t[i], vx[i])
         #ax.plot(t[i], vy[i])
-    ax.legend(["patched", "nBody"])
+    ax.legend(["patched", "nbody"])
     #ax.legend(legend)
     ax.grid()
     plt.savefig("plots/current_v.png")
@@ -140,7 +140,7 @@ def plot_r(
 
     for i in range(len(filenames)):
         ax.plot(t[i], r[i], c=colours[i])
-    ax.legend(["patched", "nBody"])
+    ax.legend(["patched", "nbody"])
     #ax.legend(legend)
     ax.grid()
     plt.savefig("plots/current_r.png")
@@ -167,7 +167,7 @@ def plot_r_v(
     for i in range(len(filenames)):
         ax1.plot(t[i], r[i], c=colours[i])
         ax2.plot(t[i], v[i], c=colours[i])
-    ax1.legend(["patched", "nBody"])
+    ax1.legend(["patched", "nbody"])
     ax1.grid()
     ax2.grid()
 

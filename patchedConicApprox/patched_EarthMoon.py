@@ -4,7 +4,8 @@ import pandas as pd
 import time
 from tabulate import tabulate
 
-from patchedConicApprox.keplerian import compute_a_e, elliptical, detect_soi_moon, orbital_elements, hyperbolic
+from patchedConicApprox.keplerian import compute_a_e, elliptical, orbital_elements, hyperbolic
+from analytics import detect_soi_moon
 
 import sys
 import os
@@ -68,7 +69,7 @@ def patched_sim(
     def printer():
         table = tabulate(useful_data,
                          headers=useful_data.columns,
-                         tablefmt="fancy_grid",
+                         tablefmt="rounded_grid",
                          numalign="center",
                          stralign="center",
                          colalign=("center", "center", "center"))
@@ -83,7 +84,7 @@ def patched_sim(
                                         theta = (2*np.pi-theta_moon),
                                         omega = omega,
                                         t_max = (t_sim - t[entered_soi_moon]),
-                                        n_points = 1_000
+                                        n_points = 5_000
                                         )
 
     end_time = time.time()

@@ -2,6 +2,26 @@ import numpy as np
 import pandas as pd
 from tabulate import tabulate
 
+from celestial_xyz import moon_xyz
+from constants import soi_moon
+
+def detect_soi_moon(
+        soi_moon: float,
+        x: np.ndarray,
+        y: np.ndarray,
+        z: np.ndarray
+    ) -> int:
+
+    """
+    Returns the index of the position-time vector when the spacecraft first enters the Moon's sphere of influence.
+    """
+
+    distanceFromMoon = np.sqrt((x - moon_xyz[0])**2 + (y - moon_xyz[1])**2 + (z - moon_xyz[2])**2)
+    soi_bool = (distanceFromMoon < soi_moon)
+    first_true_index = np.argmax(soi_bool) if np.any(soi_bool) else -1
+
+    return first_true_index
+
 def read_csvs(
         filenames: list
     ) -> tuple[list]:
@@ -103,20 +123,30 @@ def patch_point_vectors():
     patched = pd.read_csv("output/patched_EarthMoon.csv")
     nbody = pd.read_csv("output/nbody_EarthMoon.csv")
 
+    # r and v vectors from patched
     with open("output/patchPoint.txt", "r") as f:
         patch_point = int(f.read().strip()) - 1
+    patched_row = patched.iloc[patch_point]
 
-    t_patch = patched["t (s)"][patch_point]
-
-    patched_row = patched.iloc[(patched["t (s)"] - t_patch).abs().idxmin()]
-    nbody_row = nbody.iloc[(nbody["t (s)"] - t_patch).abs().idxmin()]
+    # r and v vectors from nbody
+    entered_soi_nbody = detect_soi_moon(soi_moon = soi_moon,
+                                        x = nbody["x (km)"],
+                                        y = nbody["y (km)"],
+                                        z = nbody["z (km)"])
+    nbody_row = nbody.iloc[entered_soi_nbody]
 
     at_the_edge = pd.concat([patched_row, nbody_row], axis=1)
-
     at_the_edge["diff"] = nbody_row - patched_row
+    at_the_edge["percent_diff"] = 100 * (nbody_row - patched_row) / patched_row
+    at_the_edge = at_the_edge.iloc[1:]
 
-    print(tabulate(at_the_edge, tablefmt="rounded_grid"))
+    table = tabulate(at_the_edge,
+                     headers=["quantity", "patched", "nbody", "diff", "%diff"],
+                     tablefmt="rounded_grid"
+                     )
+
+    print(table)
 
 if __name__ == "__main__":
-    process_and_export()
+    #process_and_export()
     patch_point_vectors()

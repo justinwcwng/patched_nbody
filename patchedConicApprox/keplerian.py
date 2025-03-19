@@ -64,23 +64,6 @@ def elliptical(
 
     return t, x, y, z, r, vx, vy, vz, v
 
-def detect_soi_moon(
-        soi_moon: float,
-        x: np.ndarray,
-        y: np.ndarray,
-        z: np.ndarray
-    ) -> np.ndarray[bool]:
-
-    """
-    Returns the index of the position-time vector when the spacecraft first enters the Moon's sphere of influence.
-    """
-
-    distanceFromMoon = np.sqrt((x-moon_xyz[0])**2 + (y-moon_xyz[1])**2 + (z-moon_xyz[2])**2)
-    soi_bool = (distanceFromMoon < soi_moon)
-    first_true_index = np.argmax(soi_bool) if np.any(soi_bool) else -1
-
-    return first_true_index
-
 def orbital_elements(
         mu: float,
         x: np.ndarray, y: np.ndarray, z: np.ndarray,
