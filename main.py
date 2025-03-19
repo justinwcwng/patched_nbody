@@ -1,13 +1,13 @@
 from patchedConicApprox.patched_EarthMoon import patched_sim
 from nBodyProblem.nBody_EarthMoon import nbody_sim
-from visualise import plot_xy, plot_r_v
+from visualise import plot_xy, plot_r_v, plot_r_v_diff
 
 from constants import R_earth, r_moon
 
 def main():
 
-    r1 = R_earth + 10000 # km
-    r2 = r_moon + 10000 # km
+    r1 = R_earth + 5000 # km
+    r2 = r_moon + 5000 # km
     t_sim = 500_000 # s
 
     # simulation
@@ -17,6 +17,7 @@ def main():
     # visualisation
     plot_xy(patched = False)
     plot_r_v(patched = False)
+    plot_r_v_diff()
 
     print()
     print(f"patched conic method: {t_patched:.5f} s")

@@ -37,7 +37,7 @@ def patched_sim(
                                        x = x,
                                        y = y,
                                        z = z
-                                      )
+                                       )
     x0 = x[entered_soi_moon]
     y0 = y[entered_soi_moon]
     z0 = z[entered_soi_moon]
@@ -57,7 +57,7 @@ def patched_sim(
                                                              np.array([vx0]),
                                                              np.array([vy0]),
                                                              np.array([vz0])
-                                                            )
+                                                             )
     
     useful_data = pd.DataFrame({
         "Var": ["Patch Point Index", "x0", "y0", "z0", "r0", "vx0", "vy0", "vz0", "v0", "a_h", "e_h", "inclination", "longitude of asc node", "argument of periapsis", "true anomaly"],

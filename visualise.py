@@ -1,40 +1,11 @@
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
 from matplotlib.patches import Circle
 from constants import R_earth, R_moon, soi_moon
 
-def read_csvs(
-        filenames: list
-    ) -> tuple[list]:
-
-    """
-    Reads and returns simulation data for plotting.
-    """
-
-    t = []
-    x = []
-    y = []
-    z = []
-    r = []
-    vx = []
-    vy = []
-    vz = []
-    v = []
-
-    for filename in filenames:
-        df = pd.read_csv(f"output/{filename}")
-        t += [df["t (s)"]]
-        x += [df["x (km)"]]
-        y += [df["y (km)"]]
-        z += [df["z (km)"]]
-        r += [df["r (km)"]]
-        vx += [df["vx (km/s)"]]
-        vy += [df["vy (km/s)"]]
-        vz += [df["vz (km/s)"]]
-        v += [df["v (km/s)"]]
-
-    return t, x, y, z, r, vx, vy, vz, v
+from analytics import read_csvs
 
 def plot_v(
         patched: bool = False
@@ -63,6 +34,37 @@ def plot_v(
     #ax.legend(legend)
     ax.grid()
     plt.savefig("plots/current_v.png")
+
+def plot_r_v_diff() -> None:
+
+    """
+    Plots the difference in simulated position and velocity data over time.
+    """
+
+    filename = ["diff.csv"]
+    t, _, _, _, r_diff, _, _, _, v_diff = read_csvs(filename)
+
+    t = t[0]
+    r_diff = r_diff[0]
+    v_diff = v_diff[0]
+
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(13,12))
+
+    ax1.plot(t, r_diff, c="grey")
+    ax1.set_ylabel("difference in distance from earth (km)")
+    
+    ax1.set_ylim([0, 6000])
+
+    ax2.plot(t, v_diff, c="orange")
+    ax2.set_xlabel("time elapsed (s)")
+    ax2.set_ylabel("difference in velocity (km/s)")
+
+    ax2.set_ylim([0, 0.2])
+
+    ax1.grid()
+    ax2.grid()
+
+    plt.savefig("plots/r_v_diff.png")
 
 def plot_xy(
         patched: bool = False
@@ -156,7 +158,7 @@ def plot_r_v(
 
     colours = ["red", "blue"]
 
-    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(13,10))
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(13,12))
 
     ax1.set_ylabel("distance from earth (km)")
     ax2.set_ylabel("velocity (km/s)")
@@ -173,5 +175,6 @@ def plot_r_v(
 
 if __name__ == "__main__":
     #pass
+    #plot_xy(patched = False)
     plot_r_v(patched = False)
-    plot_xy(patched = False)
+    plot_r_v_diff()

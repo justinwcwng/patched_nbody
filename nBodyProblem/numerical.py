@@ -1,6 +1,7 @@
 import numpy as np
 
 from constants import mu_earth, mu_moon, r_moon
+from celestial_xyz import earth_xyz
 
 def moon_position(theta: float=0) -> list[float]:
 
@@ -19,10 +20,10 @@ def acceleration(x, y):
     Computes the acceleration due to Earth and Moon only.
     """
 
-    r_earth_mag = np.sqrt(x**2 + y**2)
+    r_earth_mag = np.sqrt((x - earth_xyz[0])**2 + (y - earth_xyz[1])**2)
     a_earth = mu_earth / r_earth_mag**2 # instantaneous centripetal acceleration
 
-    alpha = np.arctan2(y, x) - np.pi
+    alpha = np.arctan2((y - earth_xyz[1]), (x - earth_xyz[0])) - np.pi
     a_x_earth = a_earth * np.cos(alpha)
     a_y_earth = a_earth * np.sin(alpha)
 

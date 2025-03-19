@@ -9,7 +9,7 @@ moon_xyz = np.array([-384400, 0, 0]) # km
 
 sun_xyz = np.array([0, 0, 0]) # km
 
-def earth_xyz() -> tuple[np.ndarray]:
+def earth_xyzr() -> tuple[np.ndarray]:
     t = np.linspace(0, 100, 100)
     earth_x = np.sin(t)
     earth_y = np.sin(t)
