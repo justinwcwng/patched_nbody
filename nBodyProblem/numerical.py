@@ -35,12 +35,17 @@ def acceleration(x, y) -> tuple[float]:
     a_x_moon = a_moon * np.cos(alpha_moon)
     a_y_moon = a_moon * np.sin(alpha_moon)
 
-    # temporary manual gravity override
+    # manual gravity override
     distanceFromMoon = np.sqrt((x - r_moon[0])**2 + (y - r_moon[1])**2)
     soi_bool = (distanceFromMoon < soi_moon)
-    #acc = (a_x_moon, a_y_moon) if soi_bool else (a_x_earth , a_y_earth)
+    if soi_bool:
+        acc = 0.0*a_x_earth, 0.0*a_y_earth, a_x_moon, a_y_moon
+    else:
+        acc = a_x_earth, a_y_earth, 0, 0
 
-    acc = a_x_earth + a_x_moon, a_y_earth + a_y_moon
+    #acc = a_x_earth + a_x_moon, a_y_earth + a_y_moon # if using verlet_integrator
+
+    #acc = a_x_earth, a_y_earth, a_x_moon, a_y_moon # if using integrator_investigator
 
     return acc
 
@@ -75,5 +80,54 @@ def verlet_integrator(state, h):
     state[3] = v_y
     state[4] = a_x
     state[5] = a_y
+    
+    return state
+
+def integrator_investigator(state, h):
+
+    """
+    Returns the state after one time step.
+    State consists of x, y, v_x, v_y, a_x, a_y
+    """
+
+    x, y, v_x, v_y, *_ = state # unpack
+
+    a_x_earth_old, a_y_earth_old, a_x_moon_old, a_y_moon_old = acceleration(x, y)
+    
+    a_x_old = a_x_earth_old + a_x_moon_old
+    a_y_old = a_y_earth_old + a_y_moon_old
+
+    # update position
+    x += v_x * h + 0.5 * a_x_old * h**2
+    y += v_y * h + 0.5 * a_y_old * h**2
+
+    a_x_earth_new, a_y_earth_new, a_x_moon_new, a_y_moon_new = acceleration(x, y)
+
+    a_x_new = a_x_earth_new + a_x_moon_new
+    a_y_new = a_y_earth_new + a_y_moon_new
+
+    a_x = 0.5 * (a_x_old + a_x_new)
+    a_y = 0.5 * (a_y_old + a_y_new)
+
+    a_x_earth = 0.5 * (a_x_earth_old + a_x_earth_new)
+    a_y_earth = 0.5 * (a_y_earth_old + a_y_earth_new)
+    a_x_moon = 0.5 * (a_x_moon_old + a_x_moon_new)
+    a_y_moon = 0.5 * (a_y_moon_old + a_y_moon_new)
+    
+    # update velocity
+    v_x += a_x * h
+    v_y += a_y * h
+    
+    # update state
+    state[0] = x
+    state[1] = y
+    state[2] = v_x
+    state[3] = v_y
+    state[4] = a_x
+    state[5] = a_y
+    state[6] = a_x_earth
+    state[7] = a_y_earth
+    state[8] = a_x_moon
+    state[9] = a_y_moon
     
     return state

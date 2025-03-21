@@ -2,6 +2,10 @@ import numpy as np
 
 from constants import mu_earth, r_LEO, r_moon
 
+def acceleration() -> float:
+
+    return 0
+
 def circular_v(
         mu: float,
         r: float

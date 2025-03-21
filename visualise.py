@@ -182,32 +182,35 @@ def plot_a() -> None:
     nbody = pd.read_csv("output/nbody_EarthMoon.csv")
 
     t = nbody["t (s)"]
-    ax = nbody["ax (km/s2)"]
-    ay = nbody["ay (km/s2)"]
-    az = nbody["az (km/s2)"]
+    #ax = nbody["ax (km/s2)"]
+    #ay = nbody["ay (km/s2)"]
+    #az = nbody["az (km/s2)"]
     a = nbody["a (km/s2)"]
+    ae = nbody["ae (km/s2)"]
+    am = nbody["am (km/s2)"]
 
-    ax = np.abs(1000 * ax)
-    ay = np.abs(1000 * ay)
-    az = np.abs(1000 * az)
+    #ax = np.abs(1000 * ax)
+    #ay = np.abs(1000 * ay)
+    #az = np.abs(1000 * az)
     a = np.abs(1000 * a)
+    ae = np.abs(1000 * ae)
+    am = np.abs(1000 * am)
 
-    fig, axis = plt.subplots(figsize=(15,8))
+    fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(13,10))
 
-    axis.plot(t, a, c="black")
-    #axis.plot(t, ax, c="red")
-    #axis.plot(t, ay, c="orange")
-    #axis.plot(t, az, c="green")
-    axis.set_ylabel("acceleration (km)")
+    ax1.plot(t, a, c="red")
+    ax2.plot(t, ae, c="blue")
+    ax3.plot(t, am, c="grey")
 
-    #axis.legend(["acceleration magnitude", "x acceleration", "y acceleration", "z acceleration"])
+    ax3.set_xlabel("time elapsed (s)")
+    ax2.set_ylabel("acceleration (m/s2)")
 
-    axis.set_xlabel("time elapsed (s)")
-    axis.set_ylabel("acceleration (m/s2)")
-
-    axis.set_xlim([0, 5000])
-    axis.set_ylim([0, np.max(a)])
-    axis.grid()
+    for ax in [ax1, ax2, ax3]:
+        ax.set_xlim([0, np.max(t)])
+        ax.set_xticks(np.arange(0, np.max(t)+1, 50000))
+        ax.set_ylim([0, 0.1])
+        ax.set_yticks(np.arange(0, 0.11, 0.05))
+        ax.grid()
 
     plt.savefig("plots/acc.png")
 
