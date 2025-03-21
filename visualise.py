@@ -173,8 +173,47 @@ def plot_r_v(
 
     plt.savefig("plots/current_r_v.png")
 
+def plot_a() -> None:
+
+    """
+    Plots the simulated acceleration data over time.
+    """
+    
+    nbody = pd.read_csv("output/nbody_EarthMoon.csv")
+
+    t = nbody["t (s)"]
+    ax = nbody["ax (km/s2)"]
+    ay = nbody["ay (km/s2)"]
+    az = nbody["az (km/s2)"]
+    a = nbody["a (km/s2)"]
+
+    ax = np.abs(1000 * ax)
+    ay = np.abs(1000 * ay)
+    az = np.abs(1000 * az)
+    a = np.abs(1000 * a)
+
+    fig, axis = plt.subplots(figsize=(15,8))
+
+    axis.plot(t, a, c="black")
+    #axis.plot(t, ax, c="red")
+    #axis.plot(t, ay, c="orange")
+    #axis.plot(t, az, c="green")
+    axis.set_ylabel("acceleration (km)")
+
+    #axis.legend(["acceleration magnitude", "x acceleration", "y acceleration", "z acceleration"])
+
+    axis.set_xlabel("time elapsed (s)")
+    axis.set_ylabel("acceleration (m/s2)")
+
+    axis.set_xlim([0, 5000])
+    axis.set_ylim([0, np.max(a)])
+    axis.grid()
+
+    plt.savefig("plots/acc.png")
+
 if __name__ == "__main__":
     #pass
     #plot_xy(patched = False)
-    plot_r_v(patched = False)
-    plot_r_v_diff()
+    #plot_r_v(patched = False)
+    #plot_r_v_diff()
+    plot_a()
