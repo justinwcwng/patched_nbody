@@ -7,32 +7,33 @@ from constants import R_earth, R_moon, soi_moon
 
 from analytics import read_csvs
 
-def plot_v(
+def plot_vx_vy(
         patched: bool = False
     ) -> None:
 
     """
-    Plots simulated velocity data over time.
+    Plots simulated x and y velocity data over time.
     """
 
     filenames = ["patched_EarthMoon.csv"] if patched else ["patched_EarthMoon.csv", "nBody_EarthMoon.csv"]
-    t, x, y, z, r, vx, vy, vz, v = read_csvs(filenames)
+    t, *_, vx, vy, vz, v = read_csvs(filenames)
 
-    colours = ["red", "green"]
-    legend = ["velocity magnitude", "x velocity", "y velocity"]
+    colours = ["red", "blue"]
 
-    fig, ax = plt.subplots(figsize=(15,8))
-
-    ax.set_xlabel("time elapsed (s)")
-    ax.set_ylabel("velocity (km/s)")
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(13,10))
 
     for i in range(len(filenames)):
-        ax.plot(t[i], v[i], c=colours[i])
-        #ax.plot(t[i], vx[i])
-        #ax.plot(t[i], vy[i])
-    ax.legend(["patched", "nbody"])
-    #ax.legend(legend)
-    ax.grid()
+        ax1.plot(t[i], vx[i], c=colours[i])
+        ax2.plot(t[i], vy[i], c=colours[i])
+
+    ax1.set_ylabel("x velocity (km/s)")
+    ax2.set_ylabel("y velocity (km/s)")
+    ax2.set_xlabel("time elapsed (s)")
+
+    for ax in [ax1, ax2]:
+        ax.legend(["patched", "nbody"])
+        ax.grid()
+    
     plt.savefig("plots/current_v.png")
 
 def plot_r_v_diff() -> None:
@@ -42,11 +43,14 @@ def plot_r_v_diff() -> None:
     """
 
     filename = ["diff.csv"]
-    t, _, _, _, r_diff, _, _, _, v_diff = read_csvs(filename)
+    t, _, _, _, r_diff, vx_diff, vy_diff, _, v_diff = read_csvs(filename)
 
     t = t[0]
     r_diff = r_diff[0]
     v_diff = v_diff[0]
+
+    vx_diff = vx_diff[0]
+    vy_diff = vy_diff[0]
 
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(13,12))
 
@@ -96,11 +100,11 @@ def plot_xy(
     ax.add_patch(drawMoon)
 
     # Trajectory Connection Point
-    with open("output/patchPoint.txt", "r") as f:
-        patch_point = int(f.read().strip()) - 1
-    x_patch, y_patch = x[0][patch_point], y[0][patch_point]
-    drawPatchPoint = Circle((x_patch, y_patch), 5000, edgecolor="#FFFFFF", facecolor="#000000", linewidth=3)
-    ax.add_patch(drawPatchPoint)
+    #with open("output/point_entered.txt", "r") as f:
+    #    patch_point = int(f.read().strip()) - 1
+    #x_patch, y_patch = x[0][patch_point], y[0][patch_point]
+    #drawPatchPoint = Circle((x_patch, y_patch), 5000, edgecolor="#FFFFFF", facecolor="#000000", linewidth=3)
+    #ax.add_patch(drawPatchPoint)
 
     # set x and y limits
     margin = 5e4
@@ -216,7 +220,8 @@ def plot_a() -> None:
 
 if __name__ == "__main__":
     #pass
-    #plot_xy(patched = False)
-    #plot_r_v(patched = False)
+    plot_xy(patched = False)
+    plot_r_v(patched = False)
+    plot_vx_vy()
     #plot_r_v_diff()
-    plot_a()
+    #plot_a()

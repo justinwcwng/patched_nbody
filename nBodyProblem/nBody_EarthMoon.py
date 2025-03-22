@@ -37,6 +37,11 @@ def nbody_sim(
 
     ### START OF SIMULATION ###
 
+    print()
+    print("- "*27)
+    print()
+    print("nbody problem simulation initiated")
+
     start_time = time.time()
 
     # initial acceleration
@@ -78,6 +83,8 @@ def nbody_sim(
     ### END OF SIMULATION ###
 
     print()
+    print("- "*27)
+    print()
     if duration < 1:
         msg = f"n-body simulation successful [{duration*1e3:.5f} ms]"
     else:
@@ -117,8 +124,10 @@ def nbody_sim(
     print()
     print("data shape:", df_out.shape)
     df_out.to_csv("output/nBody_EarthMoon.csv")
+    print()
     print("csv export completed")
     print()
+    print("="*53)
 
     return duration
 

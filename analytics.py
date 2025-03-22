@@ -13,14 +13,15 @@ def detect_soi_moon(
     ) -> int:
 
     """
-    Returns the index of the position-time vector when the spacecraft first enters the Moon's sphere of influence.
+    Returns the index of the position-time vector when the spacecraft first enters or exits the Moon's sphere of influence.
     """
 
     distanceFromMoon = np.sqrt((x - moon_xyz[0])**2 + (y - moon_xyz[1])**2 + (z - moon_xyz[2])**2)
     soi_bool = (distanceFromMoon < soi_moon)
-    first_true_index = np.argmax(soi_bool) if np.any(soi_bool) else -1
 
-    return first_true_index
+    switch_index = np.where(soi_bool != soi_bool[0])[0][0]# if soi_bool[0] != soi_bool[-1] else -1
+
+    return switch_index
 
 def read_csvs(
         filenames: list
