@@ -12,22 +12,22 @@ def main():
     t_sim = 700_000 # s
 
     # simulation
-    t_patched = patched_sim(r1, r2, t_sim)
-    t_nbody = nbody_sim(r1, r2, t_sim)
+    #t_patched = patched_sim(r1, r2, t_sim)
+    #t_nbody = nbody_sim(r1, r2, t_sim)
 
     # match size and compare
     process_and_export()
 
     # visualisation
-    plot_xy(patched = True)
+    plot_xy(patched = False)
     plot_r_v(patched = False)
     plot_r_v_diff()
     plot_vx_vy(patched = False)
     #plot_a()
 
     print()
-    print(f"patched conic method: {t_patched:.5f} s")
-    print(f"nbody method: {t_nbody:.5f} s")
+    #print(f"patched conic method: {t_patched:.5f} s")
+    #print(f"nbody method: {t_nbody:.5f} s")
     print()
     print("="*53)
     print()

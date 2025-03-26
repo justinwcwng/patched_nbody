@@ -1,5 +1,4 @@
 import numpy as np
-
 from constants import mu_earth, r_LEO, r_moon
 
 def acceleration() -> float:
@@ -52,6 +51,3 @@ if __name__ == "__main__":
     print(f"1st delta v = {v1:.5f} km/s")
     print(f"2nd delta v = {v2:.5f} km/s")
     print()
-
-    #ans = # custom calculation
-    #print(f"{ans:.3f}")
