@@ -34,7 +34,7 @@ def plot_vx_vy(
         ax.legend(["patched", "nbody"])
         ax.grid()
     
-    plt.savefig("plots/current_v.png")
+    plt.savefig("plots/vx_vy_vs_t.png")
 
 def plot_r_v_diff() -> None:
 
@@ -42,7 +42,7 @@ def plot_r_v_diff() -> None:
     Plots the difference in simulated position and velocity data over time.
     """
 
-    filename = ["diff.csv"]
+    filename = ["percent_diff.csv"]
     t, _, _, _, r_diff, vx_diff, vy_diff, _, v_diff = read_csvs(filename)
 
     t = t[0]
@@ -121,33 +121,7 @@ def plot_xy(
         ax.plot(x[i], y[i], c=colours[i], lw=1)
         plt.axis("equal")
         plt.legend(legend)
-        plt.savefig("plots/current_xy.png")
-
-def plot_r(
-        patched: bool = False
-    ) -> None:
-
-    """
-    Plots simulated position data over time.
-    """
-
-    filenames = ["patched_EarthMoon.csv"] if patched else ["patched_EarthMoon.csv", "nBody_EarthMoon.csv"]
-    t, x, y, z, r, vx, vy, vz, v = read_csvs(filenames)
-
-    colours = ["red", "green"]
-    legend = ["Distance from Earth"]
-
-    fig, ax = plt.subplots(figsize=(15,8))
-
-    ax.set_xlabel("time elapsed (s)")
-    ax.set_ylabel("position r (km)")
-
-    for i in range(len(filenames)):
-        ax.plot(t[i], r[i], c=colours[i])
-    ax.legend(["patched", "nbody"])
-    #ax.legend(legend)
-    ax.grid()
-    plt.savefig("plots/current_r.png")
+        plt.savefig("plots/xy.png")
 
 def plot_r_v(
         patched: bool = False
@@ -175,7 +149,7 @@ def plot_r_v(
     ax1.grid()
     ax2.grid()
 
-    plt.savefig("plots/current_r_v.png")
+    plt.savefig("plots/r_v_vs_t.png")
 
 def plot_a() -> None:
 
@@ -207,7 +181,9 @@ def plot_a() -> None:
     ax3.plot(t, am, c="grey")
 
     ax3.set_xlabel("time elapsed (s)")
-    ax2.set_ylabel("acceleration (m/s2)")
+    ax1.set_ylabel("total acceleration (m/s2)")
+    ax2.set_ylabel("Earth acceleration (m/s2)")
+    ax3.set_ylabel("Moon acceleration (m/s2)")
 
     for ax in [ax1, ax2, ax3]:
         ax.set_xlim([0, np.max(t)])
@@ -216,7 +192,7 @@ def plot_a() -> None:
         ax.set_yticks(np.arange(0, 0.11, 0.05))
         ax.grid()
 
-    plt.savefig("plots/acc.png")
+    plt.savefig("plots/acc_vs_t.png")
 
 if __name__ == "__main__":
     #pass
