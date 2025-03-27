@@ -1,23 +1,7 @@
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle
 from matplotlib.animation import FuncAnimation, FFMpegWriter
-
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from constants import R_earth
-
-
-
-### START OF DATA INGESTION ###
-
-# x, y, _, r, ... = nbody_sim(r0, r_target)
-
-### END OF DATA INGESTION ###
-
-
-
-### START OF ANIMATION ###
 
 def ani(r, x, y, v, fps, numFrame, timescale, xArray, yArray):
 
@@ -79,4 +63,7 @@ def ani(r, x, y, v, fps, numFrame, timescale, xArray, yArray):
     #FFwriter = FFMpegWriter()
     ani.save('animation.gif', writer='pillow')
 
-### END OF ANIMATION ###
+if __name__ == "__main__":
+    pass
+    # x, y, _, r, ... = nbody_sim(r0, r_target)
+    # ani(r, x, y, v, fps, numFrame, timescale, xArray, yArray)
