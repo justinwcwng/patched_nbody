@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 
 import time
+import psutil
 
 import sys
 import os
@@ -11,6 +12,10 @@ from constants import mu_earth, mu_moon, R_earth, r_LEO, r_moon
 from calculations import hohmann
 
 from nBodyProblem.numerical import acceleration, verlet_integrator, integrator_investigator
+
+def memory_usage():
+    process = psutil.Process(os.getpid())
+    return process.memory_info().rss / 1024**2  # convert bytes to MB
 
 def nbody_sim(
         r0 = r_LEO,
@@ -43,6 +48,7 @@ def nbody_sim(
     print("nbody problem simulation initiated")
 
     start_time = time.time()
+    mem_before = memory_usage()
 
     # initial acceleration
     a_x_earth, a_y_earth, a_x_moon, a_y_moon = acceleration(r0, 0)
@@ -78,7 +84,9 @@ def nbody_sim(
         a_y_moonArray += [a_y_moon]
 
     end_time = time.time()
+    mem_after = memory_usage()
     duration = end_time - start_time
+    memory_used = mem_after - mem_before
 
     ### END OF SIMULATION ###
 
@@ -90,6 +98,8 @@ def nbody_sim(
     else:
         msg = f"n-body simulation successful [{duration:.5f} s]"
     print(msg)
+    print()
+    print(f"memory used: {memory_used:.5f} MB")
 
     zArray = np.zeros(len(xArray))
     v_zArray = np.zeros(len(xArray))

@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 
 import time
+import psutil
+
 from tabulate import tabulate
 
 from patchedConicApprox.keplerian import compute_a_e, elliptical, orbital_elements, hyperbolic
@@ -12,6 +14,10 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from constants import mu_earth, mu_moon, r_LEO, r_moon, soi_moon
 from celestial_xyz import earth_xyz, moon_xyz
+
+def memory_usage():
+    process = psutil.Process(os.getpid())
+    return process.memory_info().rss / 1024**2  # convert bytes to MB
 
 def patched_sim(
         rp: float = r_LEO,
@@ -32,6 +38,7 @@ def patched_sim(
     print("patched conic simulation initiated")
 
     start_time = time.time()
+    mem_before = memory_usage()
 
     a, e = compute_a_e(ra, rp)
     t, x, y, z, r, vx, vy, vz, v = elliptical(mu = mu_earth,
@@ -130,7 +137,9 @@ def patched_sim(
     t2 += t_exited
 
     end_time = time.time()
+    mem_after = memory_usage()
     duration = end_time - start_time
+    memory_used = mem_after - mem_before
 
     ### END OF SIMULATION ###
 
@@ -180,6 +189,8 @@ def patched_sim(
     print("- "*27)
     print()
     print(f"patched conic simulation successful [{duration*1e3:5f} ms]")
+    print()
+    print(f"memory used: {memory_used:.5f} MB")
     print()
     print("data shape:", df_out.shape)
     df_out.to_csv("output/patched_EarthMoon.csv")
