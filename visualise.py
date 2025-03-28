@@ -58,14 +58,14 @@ def plot_r_v_diff() -> None:
     ax1.set_ylabel("difference in distance from Earth (km)")
     
     ax1.set_xlim([0, 500_000])
-    ax1.set_ylim([0, 0.005])
+    #ax1.set_ylim([0, 0.005])
 
     ax2.plot(t, v_diff, c="orange")
     ax2.set_xlabel("time elapsed (s)")
     ax2.set_ylabel("difference in velocity (km/s)")
 
     ax1.set_xlim([0, 500_000])
-    ax2.set_ylim([0, 0.005])
+    #ax2.set_ylim([0, 0.005])
 
     ax1.grid()
     ax2.grid()
@@ -197,7 +197,6 @@ def plot_acc() -> None:
     plt.savefig("plots/acc_vs_t.png")
 
 if __name__ == "__main__":
-    #pass
     #plot_xy(patched = False)
     #plot_r_v(patched = False)
     #plot_vx_vy()
