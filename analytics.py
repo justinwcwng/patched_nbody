@@ -19,6 +19,12 @@ def detect_soi_moon(
     distanceFromMoon = np.sqrt((x - moon_xyz[0])**2 + (y - moon_xyz[1])**2 + (z - moon_xyz[2])**2)
     soi_bool = (distanceFromMoon < soi_moon)
 
+    # ONLY INCLUDE IF YOU WANT PATCH POINT 2
+    if 1 == 0:
+        soi_bool = np.array(soi_bool)
+        i = 500_000
+        soi_bool = soi_bool[i:-1]
+
     switch_index = np.where(soi_bool != soi_bool[0])[0][0]# if soi_bool[0] != soi_bool[-1] else -1
 
     return switch_index
@@ -125,7 +131,7 @@ def patch_point_vectors():
     nbody = pd.read_csv("output/nbody_EarthMoon.csv")
 
     # r and v vectors from patched
-    with open("output/patchPoint.txt", "r") as f:
+    with open("output/point_entered.txt", "r") as f:
         patch_point = int(f.read().strip()) - 1
     patched_row = patched.iloc[patch_point]
 
@@ -136,10 +142,11 @@ def patch_point_vectors():
                                         z = nbody["z (km)"])
     nbody_row = nbody.iloc[entered_soi_nbody]
 
+    # concatenate & compare
     at_the_edge = pd.concat([patched_row, nbody_row], axis=1)
     at_the_edge["diff"] = nbody_row - patched_row
     at_the_edge["percent_diff"] = 100 * (nbody_row - patched_row) / patched_row
-    at_the_edge = at_the_edge.iloc[1:]
+    at_the_edge = at_the_edge.iloc[1:-12]
 
     table = tabulate(at_the_edge,
                      headers=["quantity", "patched", "nbody", "diff", "%diff"],

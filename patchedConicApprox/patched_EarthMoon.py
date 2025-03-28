@@ -23,11 +23,12 @@ def patched_sim(
         rp: float = r_LEO,
         ra: float = r_moon,
         t_sim: float = 600_000
-    ) -> float:
+    ) -> tuple[float]:
 
     """
     Main simulation function for the Patched Conic Approximation method.
-    Currently trialling an Earth-Moon trajectory, patched at the edge of the Moon's sphere of influence.
+    Currently trialling an Earth-Moon trajectory, patched when entering and exiting the Moon's sphere of influence.
+    Returns the duration of simulation and memory usage.
     """
 
     ### START OF SIMULATION ###
@@ -199,7 +200,7 @@ def patched_sim(
     print()
     print("="*53)
 
-    return duration
+    return duration, memory_used
 
 if __name__ == "__main__":
     patched_sim()

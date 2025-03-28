@@ -39,12 +39,10 @@ def acceleration(x, y) -> tuple[float]:
     distanceFromMoon = np.sqrt((x - r_moon[0])**2 + (y - r_moon[1])**2)
     soi_bool = (distanceFromMoon < soi_moon)
     if soi_bool:
-        acc = 0.0*a_x_earth, 0.0*a_y_earth, a_x_moon, a_y_moon
+        acc = 0, 0, a_x_moon, a_y_moon
     else:
         acc = a_x_earth, a_y_earth, 0, 0
-
-    #acc = a_x_earth + a_x_moon, a_y_earth + a_y_moon # if using verlet_integrator
-
+    
     #acc = a_x_earth, a_y_earth, a_x_moon, a_y_moon # if using integrator_investigator
 
     return acc

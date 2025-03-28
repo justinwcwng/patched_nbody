@@ -55,15 +55,17 @@ def plot_r_v_diff() -> None:
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(13,12))
 
     ax1.plot(t, r_diff, c="grey")
-    ax1.set_ylabel("difference in distance from earth (km)")
+    ax1.set_ylabel("difference in distance from Earth (km)")
     
-    #ax1.set_ylim([0, 1000])
+    ax1.set_xlim([0, 500_000])
+    ax1.set_ylim([0, 0.005])
 
     ax2.plot(t, v_diff, c="orange")
     ax2.set_xlabel("time elapsed (s)")
     ax2.set_ylabel("difference in velocity (km/s)")
 
-    #ax2.set_ylim([0, 0.002])
+    ax1.set_xlim([0, 500_000])
+    ax2.set_ylim([0, 0.005])
 
     ax1.grid()
     ax2.grid()
@@ -82,7 +84,7 @@ def plot_xy(
     t, x, y, z, r, vx, vy, vz, v = read_csvs(filenames)
 
     colours = ["yellow", "orange"]
-    legend = ["Earth", "Moon's SOI", "Moon", "Patch Point", "Patched Conic Approx", "n-Body Problem Solution"]
+    legend = ["Earth", "Moon's SOI", "Moon", "Patched Conic Approx", "n-Body Problem Solution"]
 
     fig, ax = plt.subplots(figsize=(13,10))
     ax.set_facecolor("#050505")
@@ -151,7 +153,7 @@ def plot_r_v(
 
     plt.savefig("plots/r_v_vs_t.png")
 
-def plot_a() -> None:
+def plot_acc() -> None:
 
     """
     Plots the simulated acceleration data over time.
@@ -189,15 +191,15 @@ def plot_a() -> None:
         ax.set_xlim([0, np.max(t)])
         ax.set_xticks(np.arange(0, np.max(t)+1, 50000))
         ax.set_ylim([0, 0.1])
-        ax.set_yticks(np.arange(0, 0.11, 0.05))
+        ax.set_yticks(np.arange(0, 0.16, 0.05))
         ax.grid()
 
     plt.savefig("plots/acc_vs_t.png")
 
 if __name__ == "__main__":
     #pass
-    plot_xy(patched = False)
-    plot_r_v(patched = False)
-    plot_vx_vy()
-    #plot_r_v_diff()
-    #plot_a()
+    #plot_xy(patched = False)
+    #plot_r_v(patched = False)
+    #plot_vx_vy()
+    plot_r_v_diff()
+    plot_acc()

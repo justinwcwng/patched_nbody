@@ -21,11 +21,12 @@ def nbody_sim(
         r0 = r_LEO,
         r_target = r_moon,
         t_sim: float = 700_000
-    ) -> float:
+    ) -> tuple[float]:
 
     """
     Main simulation function for the n-Body Problem method.
     Currently trialling an Earth-Moon trajectory.
+    Returns the duration of simulation and memory usage.
     """
 
     delta_v1, _ = hohmann(mu_earth, r0, r_target)
@@ -139,7 +140,7 @@ def nbody_sim(
     print()
     print("="*53)
 
-    return duration
+    return duration, memory_used
 
 if __name__ == "__main__":
     nbody_sim()
